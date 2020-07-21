@@ -34,13 +34,13 @@ jobs:
       id: publish-artft
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ runner.os }}
+        name: ${{ runner.os }}.zip
         path: dist/* 
     - name: Download Asset
       uses: actions/download-artifact@v2
       id: download
       with:
-        name: ${{ runner.os }}
+        name: twitch_log_runner_${{ runner.os }}.zip
         path: ./artif/
     - name: Create Release
       id: create_release
@@ -48,8 +48,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ runner.os }}_${{ github.ref }}
-        release_name: Release ${{ runner.os }}_${{ github.ref }}
+        tag_name: ${{ runner.os }}
+        release_name: ${{ runner.os }} Release 
         draft: false
         prerelease: false
     - name: Upload Release Asset
@@ -60,5 +60,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} 
         asset_path: ${{ steps.download.outputs.download-path }}
-        asset_name: ${{ runner.os }}_${{ github.ref }}.zip
+        asset_name: twitch_log_runner_${{ runner.os }}.zip
         asset_content_type: application/zip
