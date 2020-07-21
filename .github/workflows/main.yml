@@ -42,8 +42,11 @@ jobs:
       id: download
       with:
         name: twitch_log_runner_${{ runner.os }}_${{ env.repo_pkg_version }}.zip
+        path: ./artef/ 
     - name: List files
-      run: ls -an ./
+      run: |
+        python -m zipfile -c twitch_log_runner_${{ runner.os }}_${{ env.repo_pkg_version }}.zip ./artef/*
+        ls -an ./
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
