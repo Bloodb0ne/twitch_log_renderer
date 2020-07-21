@@ -61,7 +61,7 @@ class HTMLRenderer(Renderer):
 		
 		html_template = "$content"
 		if self.options.get('template_path',False):
-			with codecs.open(templatePath, encoding='utf-8') as f:
+			with codecs.open(self.options.get('template_path'), encoding='utf-8') as f:
 				html_template = f.read()
 		else:
 			#Use Default Template
