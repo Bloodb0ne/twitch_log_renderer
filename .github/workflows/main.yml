@@ -49,8 +49,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
+        tag_name: v${{ env.repo_pkg_version }}_${{ runner.os }}
         release_name: ${{ runner.os }} Release 
-        draft: false
+        draft: true
         prerelease: false
     - name: Upload Release Asset
       id: upload-release-asset 
