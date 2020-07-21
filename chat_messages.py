@@ -169,7 +169,7 @@ class ChatMessageList:
 	
 	def map(self,func):
 		for msg in self.messages:
-			func(messages)
+			func(msg)
 
 	def hasTimestamps(self):
 		return all([msg.timestamp for msg in self.messages])
