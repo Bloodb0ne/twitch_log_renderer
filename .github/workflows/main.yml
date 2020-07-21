@@ -34,7 +34,7 @@ jobs:
       id: publish-artft
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ runner.os }}.zip
+        name: twitch_log_runner_${{ runner.os }}.zip
         path: dist/* 
     - name: Download Asset
       uses: actions/download-artifact@v2
