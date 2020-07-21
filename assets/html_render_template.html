@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chat Previewer</title>
+</head>
+
+<script type="text/javascript">
+</script>
+<style type="text/css">
+	a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+    }
+    :root{;
+    --font-base: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-display: "Helvetica Neue", "Helvetica", sans-serif;
+    }
+    body{
+         font-family: var(--font-base)
+    }
+    .chatPreview{
+        background: #18181B;
+        width: 100vw;
+        height: 100vh;
+        overflow-y: scroll;
+        color:white;
+        resize: horizontal;
+    }
+    .msg{
+        padding: .5rem 2rem;
+        word-wrap: break-word;
+        min-height: 1.2rem;
+        line-height: 2rem;
+        font-size:1rem;
+    }
+    .msg:nth-child(2n){
+        background-color: #222222;
+    }
+    .msg--uname{
+        font-weight: bolder;
+        padding-right: 5px;
+        line-height: 2rem;
+        height: 2rem;
+    }
+    .msg--container{
+        word-wrap: break-word;
+        line-height: 2rem;
+        min-height: 2rem;
+        display: inline;
+    }
+    .emote{
+        display: inline;
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    .emote img{
+        vertical-align: middle;
+    }
+    .badge{
+        width: 18px;
+        height: 1.2rem;
+        padding: 2px;
+    }
+    .badge img{
+        width: 18px;
+        vertical-align: middle;
+    }
+    .cheermote img{
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+    }
+    .mention{
+        /*background-color: #dedee3!important;*/
+        font-weight: bolder;
+    }
+</style>
+<body>
+	<div class='globalCont'>
+		<div class='chatPreview'>
+			$content
+		</div>
+	</div>
+</body>
+</html>
