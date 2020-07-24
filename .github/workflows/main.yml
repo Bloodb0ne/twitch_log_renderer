@@ -1,7 +1,9 @@
 name: Twitch Log Renderer Build
 
-on: [push]
-
+on:
+  push:
+    tags:
+      - 'v*.*.*'
 jobs:
   build:
 
@@ -52,8 +54,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ env.repo_pkg_version }}_${{ runner.os }}
-        release_name: ${{ runner.os }} Release 
+        tag_name: v${{ env.repo_pkg_version }}
+        release_name: Release 
         draft: true
         prerelease: false
     - name: Upload Release Asset
