@@ -105,7 +105,7 @@ class VideoRenderer:
 		sW = (fW + w)
 		sH = (line + h)
 		
-		dst = skia.Rect(fW,l,sW,sH)
+		dst = skia.Rect(fW,line,sW,sH)
 		tempPaint = skia.Paint()
 		tempPaint.setFilterQuality(skia.FilterQuality.kHigh_FilterQuality)
 		canvas.drawImageRect(frame, src, dst, tempPaint)

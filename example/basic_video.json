@@ -1,0 +1,16 @@
+{
+    "--include_timestamps": false,
+    "--timestamp_format": "[%H:%M]",
+    "--start": "1m",
+    "--end": "5m",
+    "--txt_color": "white",
+    "--txt_font_size": 9,
+    "--uname_font_size": 12,
+    "--even_bg": "#222222",
+    "--tstamp_color": "#30FFFFFF",
+    "--fps": "60",
+    "--txt_font":"DejaVu Sans Mono",
+    "--image_scale": 0.95,
+    "--fadeout":1,
+    "--line_height": 30
+}

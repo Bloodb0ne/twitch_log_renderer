@@ -19,12 +19,6 @@ def get_num_lines(file_path):
 		lines += 1
 	return lines
 
-def parseContent(isTwitchLog = False):
-	if isTwitchLog:
-		emoteFinder = functools.partial(findEmote,full = False)
-	else:
-		emoteFinder = findEmote
-	text = re.sub(r"[\d\w\S]{1,20}",emoteFinder,text)
 
 class LogParser:
 	

@@ -1,4 +1,5 @@
 import ffmpeg
+import os
 import subprocess
 
 class ffmpeg_output_pipe:

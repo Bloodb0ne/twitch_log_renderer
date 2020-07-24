@@ -52,7 +52,7 @@ def getTextRuns(string,font,fmgr):
 				cRun = {'font':lst_font,'str':[uchar]}
 		else:
 			if default_glyph == glyph and lst_font != font:
-				lists.append(l)
+				lists.append(cRun)
 				cRun = {'font':font,'str':[uchar]}
 				lst_font = font
 			else:
