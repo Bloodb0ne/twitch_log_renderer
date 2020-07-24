@@ -1,14 +1,24 @@
-from setuptools import setup, find_namespace_packages
+from setuptools import setup, find_packages, find_namespace_packages
 
 setup(
-    name = "twitch_log_renderer",
-    version = "0.0.1",
-    description = ("CLI tool for rendering twitch logs into image/video/html."),
-    packages=find_namespace_packages(include=['twitch_log_renderer.*']),
-    install_requires=[
-        "skia-python >= 85.0",
-        "ffmpeg-python",
-        "numpy",
-        "tqdm"
-    ]
+	name="twitch_log_renderer",
+	version="0.0.1",
+	url="https://github.com/Bloodb0ne/twitch_log_renderer/",
+	author="bloodb0ne",
+	author_email="emilian.branzelov@gmail.com",
+	description=("CLI tool for rendering twitch logs into image/video/html."),
+	packages=find_packages(),
+	package_dir={'twitch_log_renderer':'twitch_log_renderer'},
+	entry_points={
+		'console_scripts': [
+			'twitch_log_renderer = twitch_log_renderer.__main__:main'
+		]
+	},
+	include_package_data=True,
+	install_requires=[
+		"skia-python >= 85.0",
+		"ffmpeg-python",
+		"numpy",
+		"tqdm"
+	]
 )

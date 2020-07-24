@@ -1,14 +1,12 @@
-import node_types
 import codecs
 import re
 import json
-import functools
 from tqdm import tqdm
 import mmap
 import os
-from cachers import Emote
-from providers.user import User
-from chat_messages import ChatMessage,ChatMessageList
+from .cachers import Emote
+from .providers.user import User
+from .chat_messages import ChatMessage,ChatMessageList
 
 # A fast line counter
 # Taken from:
@@ -20,6 +18,13 @@ def get_num_lines(file_path):
 	while buf.readline():
 		lines += 1
 	return lines
+
+def parseContent(isTwitchLog = False):
+	if isTwitchLog:
+		emoteFinder = functools.partial(findEmote,full = False)
+	else:
+		emoteFinder = findEmote
+	text = re.sub(r"[\d\w\S]{1,20}",emoteFinder,text)
 
 class LogParser:
 	
@@ -36,7 +41,9 @@ class LogParser:
 		with codecs.open(input_file, encoding='utf-8') as f:
 			# print("[Parser] Parsing raw log messages")
 			for n,line in enumerate(tqdm(f,total=get_num_lines(input_file),unit='msg',unit_scale=True,desc='\033[92mParsing  \033[0m')):
-				if line[0] == '#': continue
+				if line[0] == '#': 
+					continue
+
 				matches = re.search(line_splitter,line)
 				timestamp = ""
 				
@@ -45,6 +52,7 @@ class LogParser:
 				# 
 				if matches is None:
 					continue
+				
 				if len(matches.groups()) == 4:
 					timestamp = matches.group(1)
 					channel = matches.group(2)

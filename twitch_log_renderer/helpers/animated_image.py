@@ -29,7 +29,7 @@ class AnimatedImage:
 		return self.getFrameAt(self.fCurrIndex) if self.tDuration > 0 else self.fImages[0]
 
 	def loadStaticFrame(self):
-		if self.fImages.get(0,False) != False:
+		if self.fImages.get(0,False) is not False:
 			return self.fImages[0]
 
 		rb = self.imageInfo.minRowBytes()
@@ -42,7 +42,7 @@ class AnimatedImage:
 		return False
 
 	def getFrameAt(self,index):
-		if self.fImages.get(index,False) != False:
+		if self.fImages.get(index,False) is not False:
 			return self.fImages[index]
 
 		rb = self.imageInfo.minRowBytes()
@@ -70,7 +70,8 @@ class AnimatedImage:
 		return False
 
 	def seek(self,msec):
-		if self.tDuration == 0: return False
+		if self.tDuration == 0: 
+			return False
 		msec = msec % self.tDuration
 
 		lower = next((ind for ind,fi in enumerate(self.fInfos) if fi.fDuration >= msec ),0)

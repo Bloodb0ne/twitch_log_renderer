@@ -56,11 +56,11 @@ class DrawingOptions:
 		self.usrPaint.setFilterQuality(skia.FilterQuality.kHigh_FilterQuality)
 
 	
-	def drawScaledImage(self,image,scale,l,pos,canvas):
+	def drawScaledImage(self,image,scale,line,pos,canvas):
 		w = image.width()
 		h = image.height()
   
-		of = round(l - (h * scale) / 2 - self.spacer / 4)
+		of = round(line - (h * scale) / 2 - self.spacer / 4)
 
 		#Destination
 		nX = pos.x()

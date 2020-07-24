@@ -1,6 +1,6 @@
 import random
-from database import emote_database
-from providers.twitch import Twitch
+from ..database import emote_database
+from .twitch import Twitch
 
 class User:
 	default_user_color = '#53535f'

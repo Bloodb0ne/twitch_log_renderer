@@ -1,5 +1,5 @@
-from providers.twitch import Twitch
-from database import emote_database
+from .twitch import Twitch
+from ..database import emote_database
 
 class Cheermotes:
 	

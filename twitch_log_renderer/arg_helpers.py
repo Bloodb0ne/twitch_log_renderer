@@ -1,11 +1,10 @@
 import re
-import os
 import datetime
 import skia
 import argparse
 import json
 import itertools
-from colors import colors
+from .colors import colors
 
 
 def hex_color(v):
@@ -138,7 +137,7 @@ def mergeConfigOptions(cli_args,cfg_path):
 	# Override config options
 	for k,v in new_args.items():
 		if k not in cargs:
-			if v == False:
+			if v is False:
 				cargs[k] = None
 			else:
 				cargs[k] = str(v)

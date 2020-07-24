@@ -2,11 +2,10 @@ import datetime
 import re
 import html
 import functools
-from cachers import WordCache,Emote
-from providers.user import User
-from node_types import TextNode,EmoteNode,BadgeNode,LinkNode,MentionNode
-from cachers import BadgeCache,CheermoteCache
-from helpers.skia_rendering import skia_canvas
+from .cachers import WordCache,Emote,BadgeCache,CheermoteCache
+from .providers.user import User
+from .node_types import TextNode,EmoteNode,BadgeNode,LinkNode,MentionNode
+from .helpers.skia_rendering import skia_canvas
 
 link_regx = r"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w\-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)"
 mention_regx = r"^@\w*$"

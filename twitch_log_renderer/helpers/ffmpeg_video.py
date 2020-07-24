@@ -1,5 +1,4 @@
 import ffmpeg
-import os
 import subprocess
 
 class ffmpeg_output_pipe:
@@ -93,4 +92,3 @@ class ffmpeg_output_pipe:
 		#Simple Cleanup
 		self.proc.stdin.close()
 		self.proc.wait()
-

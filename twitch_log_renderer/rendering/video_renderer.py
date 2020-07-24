@@ -10,13 +10,13 @@ import codecs
 import html
 import numpy as np
 from tqdm import tqdm
-from node_types import TextNode,EmoteNode,LinkNode,MentionNode,CheermoteNode,BadgeNode
-from helpers.animated_image import AnimatedImage
-from helpers.skia_rendering import skia_canvas,shapeStringToSkBlob
-from helpers.ffmpeg_video import ffmpeg_output_pipe
-from helpers.drawing_options import DrawingOptions
+from ..node_types import TextNode,EmoteNode,LinkNode,MentionNode,CheermoteNode,BadgeNode
+from ..helpers.animated_image import AnimatedImage
+from ..helpers.skia_rendering import skia_canvas,shapeStringToSkBlob
+from ..helpers.ffmpeg_video import ffmpeg_output_pipe
+from ..helpers.drawing_options import DrawingOptions
 
-from imaged_chat_message import ImagedChatMessage
+from ..imaged_chat_message import ImagedChatMessage
 
 def linesHeight(lines,full = False):
 	if full:
@@ -89,26 +89,26 @@ class VideoRenderer:
 		total = abs(self.maxLines - lnm)
 		#Offset lines that push current added outside of the frame
 		if lnm > self.maxLines:
-			inu = self.chatHeight - linesHeight(self.current_frame_msgs,True) * self.lineHeight
+			inu = self.chatHeight - linesHeight(self.current_frame_msgs) * self.lineHeight
 			self.rOffset = abs(inu)
 		else:
 			self.rOffset = 0
 		
 		
-	def renderSnapshot(self,msg,canvas,ms,l):
+	def renderSnapshot(self,msg,canvas,ms,line):
 		frame = msg.snapshot(ms)
 		
 		w = frame.width()
 		h = frame.height()
 		src = skia.Rect.MakeXYWH(0,0,w,h)
-		fW = w*msg.fade
+		fW = w * msg.fade
 		sW = (fW + w)
-		sH = (l + h)
+		sH = (line + h)
 		
 		dst = skia.Rect(fW,l,sW,sH)
 		tempPaint = skia.Paint()
 		tempPaint.setFilterQuality(skia.FilterQuality.kHigh_FilterQuality)
-		canvas.drawImageRect(frame,src,dst,tempPaint)
+		canvas.drawImageRect(frame, src, dst, tempPaint)
 	
 	def render_frame(self,ms):
 		with skia_canvas(self.options['width'],self.options['height']) as canvas:
@@ -117,10 +117,10 @@ class VideoRenderer:
 			paint.setColor(self.options['bg'])
 			canvas.drawRect(self.frame_rect, paint)
 
-			l = 0
+			line = 0
 			for msg in self.current_frame_msgs:
-				self.renderSnapshot(msg,canvas,ms,l-self.rOffset)
-				l+= msg.lheight * self.lineHeight
+				self.renderSnapshot(msg,canvas,ms,line-self.rOffset)
+				line += msg.lheight * self.lineHeight
 
 			canvas.readPixels(skia.ImageInfo.MakeN32Premul(self.options['width'],self.options['height']),self.buffer)
 			
@@ -141,7 +141,7 @@ class VideoRenderer:
 			linesLeft  = self.maxLines - msg.lheight
 			endTime = self.getMessageDuration(ind,self.maxLines)
 			if endTime:
-				msg.endFade = endTime + datetime.timedelta(seconds=fadeDuration)
+				msg.endFade = endTime - datetime.timedelta(seconds=fadeDuration)
 			
 		
 	def run(self,messages):

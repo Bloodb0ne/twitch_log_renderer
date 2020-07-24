@@ -1,9 +1,8 @@
-import imaging_functions
 import re
-from colors import strToHexList
-from helpers.asset_helpers import TextBlobCache,ImageCache
-from helpers.drawing_options import DrawingOptions
-from providers import BTTV,FFZ,Twitch
+from .colors import strToHexList
+from .helpers.asset_helpers import TextBlobCache,ImageCache
+from .helpers.drawing_options import DrawingOptions
+from .providers import BTTV,FFZ,Twitch
 
 
 class BasicNode(type):

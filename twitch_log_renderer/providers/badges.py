@@ -1,5 +1,5 @@
-from providers.twitch import Twitch
-from database import emote_database
+from .twitch import Twitch
+from ..database import emote_database
 
 class Badges:
 	
@@ -9,7 +9,8 @@ class Badges:
 		'''
 		result = {}
 		scale += 1
-		if scale > 4: scale = 4
+		if scale > 4: 
+			scale = 4
 		with emote_database(database) as conn:
 			cur = conn.cursor()
 			cur.execute("SELECT set_name,version,url,url2,url4,title FROM badges where channel_id = ? or channel_id = 0",(channel_id,))

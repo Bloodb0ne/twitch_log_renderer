@@ -2,14 +2,12 @@ from string import Template
 import os
 import codecs
 from tqdm import tqdm
-from node_types import TextNode,EmoteNode,LinkNode,MentionNode,CheermoteNode
-from rendering.basic_renderer import Renderer
+from ..node_types import TextNode,EmoteNode,LinkNode,MentionNode,CheermoteNode
 import importlib.resources as pkg_resources
 
-import assets
+from .. import assets
 
-
-class HTMLRenderer(Renderer):
+class HTMLRenderer:
 	defaultOptions = {
 		'template_path':False
 	}
@@ -61,7 +59,7 @@ class HTMLRenderer(Renderer):
 		
 		html_template = "$content"
 		if self.options.get('template_path',False):
-			with codecs.open(self.options.get('template_path'), encoding='utf-8') as f:
+			with codecs.open(templatePath, encoding='utf-8') as f:
 				html_template = f.read()
 		else:
 			#Use Default Template

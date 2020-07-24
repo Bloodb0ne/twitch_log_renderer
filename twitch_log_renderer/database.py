@@ -8,7 +8,7 @@ def emote_database(customPath = False):
 		createEmptyDatabase(customPath)
 	conn = sqlite3.connect(customPath)
 	yield conn
-	conn.close() # is this considered cleanup
+	conn.close()  # is this considered cleanup
 
 def createEmptyDatabase(file_path):
 	try:

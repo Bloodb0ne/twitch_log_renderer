@@ -1,11 +1,12 @@
 import urllib.request
 import urllib.parse
 import json
-from database import emote_database
+from ..database import emote_database
 
 class FFZ:
 	def emoteURL(ident,scale = 1):
-		if scale == 3: scale = 4
+		if scale == 3: 
+			scale = 4
 		return "https://cdn.frankerfacez.com/emoticon/{0}/{1}".format(ident,scale)
 	
 	def emotesToDatabase(uid,emotes,database = False):

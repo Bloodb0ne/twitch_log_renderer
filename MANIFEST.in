@@ -1,0 +1,2 @@
+graft twitch_log_renderer/assets
+global-exclude *.py[cod] __pycache__

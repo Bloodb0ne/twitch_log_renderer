@@ -1,8 +1,8 @@
 import re
-from database import emote_database
-from node_types import EmoteNode,TextNode,CheermoteNode
-from providers.badges import Badges
-from providers.cheermotes import Cheermotes
+from .database import emote_database
+from .node_types import EmoteNode,TextNode,CheermoteNode
+from .providers.badges import Badges
+from .providers.cheermotes import Cheermotes
 
 class CheermoteCache:
 	"""Cheermote cache"""
@@ -19,7 +19,7 @@ class CheermoteCache:
 		CheermoteCache.cheermotes = Cheermotes.getCheermotes(channel_id,scale,animated,theme,database=CheermoteCache.databasePath)
 		#Create matcher
 		prefixes = "|".join([cheermote[0] for cheermote in CheermoteCache.cheermotes])
-		CheermoteCache.matcher = re.compile("({0})(\d+)".format(prefixes))
+		CheermoteCache.matcher = re.compile(r'({0})(\d+)'.format(prefixes))
 
 	def isCheermote(txt):
 		match = CheermoteCache.matcher.match(txt.title())
@@ -29,7 +29,8 @@ class CheermoteCache:
 			amount = int(match.group(2))
 
 			chm = CheermoteCache.getCheermote(prefix,amount)
-			if not chm: return False
+			if not chm: 
+				return False
 			return CheermoteNode(prefix,chm[4],chm[2],amount)
 		return False	
 

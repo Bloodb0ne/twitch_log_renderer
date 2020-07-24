@@ -34,7 +34,7 @@ class TypefaceTableCache:
 
 def getTextRuns(string,font,fmgr):
 	lists = []
-	l = {'font':font,'str':[]}
+	cRun = {'font':font,'str':[]}
 	lst_font = font
 	for uchar in string:
 		codepoint = ord(uchar)
@@ -42,23 +42,23 @@ def getTextRuns(string,font,fmgr):
 		default_glyph = font.unicharToGlyph(codepoint)
 		
 		if not glyph:
-			#we cant match with the current font
-			lists.append(l)
-			#find new font
+			# We cant match with the current font
+			lists.append(cRun)
+			# Find new font
 			alt_font = fmgr.matchFamilyStyleCharacter(font.getTypeface().getFamilyName(),font.getTypeface().fontStyle(),[''],codepoint)
 			if alt_font:
 				glyph = alt_font.unicharToGlyph(codepoint)
 				lst_font = skia.Font(alt_font,font.getSize())
-				l = {'font':lst_font,'str':[uchar]}
+				cRun = {'font':lst_font,'str':[uchar]}
 		else:
 			if default_glyph == glyph and lst_font != font:
 				lists.append(l)
-				l = {'font':font,'str':[uchar]}
+				cRun = {'font':font,'str':[uchar]}
 				lst_font = font
 			else:
-				l['str'].append(uchar)
+				cRun['str'].append(uchar)
 		
-	lists.append(l)
+	lists.append(cRun)
 	return lists
 
 def getSkiaFontTable(face,tag,data):
@@ -74,7 +74,7 @@ def shaper(s,tf,size):
 		buf = hb.Buffer()
 
 		buf.add_utf8(s.encode('utf-8'))
-		#buf.add_str(s)
+		# buf.add_str(s)
 		buf.guess_segment_properties()
 
 		features = {"kern": True, "liga": True}
@@ -104,5 +104,5 @@ def shapeStringToSkBlob(s,text_font,font_manager):
 			spositions.append(su)
 			su+=p[0]
 		tbb_.allocRunPosH(font,glyphs,spositions,0.0)
-		adv += su #sum([x[0]+x[1] for x in positions],0.0)
+		adv += su  # sum([x[0]+x[1] for x in positions],0.0)
 	return (tbb_.make(),adv)

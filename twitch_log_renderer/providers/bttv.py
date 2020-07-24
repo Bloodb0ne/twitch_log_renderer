@@ -1,7 +1,7 @@
 import urllib.request
 import urllib.parse
 import json
-from database import emote_database
+from ..database import emote_database
 
 class BTTV:
 	def emoteURL(ident,scale = 1):

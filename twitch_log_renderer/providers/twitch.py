@@ -3,9 +3,9 @@ import urllib.parse
 import json
 import sqlite3
 import tempfile
-from database import emote_database
 import requests
 import re
+from ..database import emote_database
 
 class Twitch():
 	def __init__(self,client_id = False):
@@ -31,7 +31,8 @@ class Twitch():
 		with emote_database(database) as conn:
 			c = conn.cursor()
 			for emote in emotes['emoticons']:
-				if emote['emoticon_set'] == 0: continue
+				if emote['emoticon_set'] == 0: 
+					continue
 				prefix = re.match(r"([a-z0-9]*)(.*)",emote['code']).group(1)
 				tpl = (emote['id'],prefix,emote['code'],emote['emoticon_set'])
 				c.execute("INSERT OR IGNORE INTO twitch_emotes VALUES (?,?,?,?)",tpl)
@@ -74,7 +75,8 @@ class Twitch():
 		return data.get('actions',[])
 	
 	def getUserIDs(self,user_logins):
-		if len(user_logins) == 0: return {}
+		if len(user_logins) == 0: 
+			return {}
 		
 		user_logins = ','.join(user_logins)
 		params = urllib.parse.urlencode({'client_id':self.client_id,'login':user_logins})

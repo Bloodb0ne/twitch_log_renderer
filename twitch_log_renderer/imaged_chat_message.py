@@ -1,9 +1,9 @@
 import skia
-from helpers.skia_rendering import skia_canvas
-from chat_messages import ChatMessage
-from helpers.drawing_options import DrawingOptions
-from colors import strToHexList
-from node_types import TextNode,LinkNode,MentionNode,BadgeNode,CheermoteNode,EmoteNode
+from .helpers.skia_rendering import skia_canvas
+from .chat_messages import ChatMessage
+from .helpers.drawing_options import DrawingOptions
+from .colors import strToHexList
+from .node_types import TextNode,LinkNode,MentionNode,BadgeNode,CheermoteNode,EmoteNode
 
 class ImagedChatMessage():
 	'''
@@ -20,16 +20,16 @@ class ImagedChatMessage():
 		# Any other way specify this
 		self.fade = 0
 		self.shouldDelete = False
-		#Fading
+		# Fading
 		self.endFade = None
 		self.startFade = None
 
-		self.fitToWidth() #measures nodes to add positional information
+		self.fitToWidth()  #measures nodes to add positional information
 		
 		self.height = self.lheight * self.lh
 		self.rect = skia.Rect.MakeXYWH(0,0,self.width,self.height)
 		self.snapshot_ = None
-		#snapshot should be created on demand for speed ?
+		# Snapshot should be created on demand for speed ?
 	
 	def isAnimated(self):
 		return any([node.isAnimated for node in self.msg.nodes])
@@ -43,32 +43,32 @@ class ImagedChatMessage():
 				self.snapshot_ = canvas.getSurface().makeImageSnapshot()
 		return self.snapshot_
 	
-	def renderNode(self,node,canvas,pos = skia.Point(0,0),l=0,msec = 0):
+	def renderNode(self,node,canvas,pos = skia.Point(0,0),line=0,msec = 0):
 		if isinstance(node,TextNode):
 			
 			if node.stype == 'username':
-				canvas.drawTextBlob(node.text_blob, pos.x(),l+pos.y(),self.drawOptions.usrPaint)
+				canvas.drawTextBlob(node.text_blob, pos.x(),line+pos.y(),self.drawOptions.usrPaint)
 			elif node.stype == 'timestamp':
-				canvas.drawTextBlob(node.text_blob, pos.x(),l+pos.y(),self.drawOptions.tstampPaint)
+				canvas.drawTextBlob(node.text_blob, pos.x(),line+pos.y(),self.drawOptions.tstampPaint)
 			else:
-				canvas.drawTextBlob(node.text_blob, pos.x(),l+pos.y(),self.drawOptions.txtPaint)
+				canvas.drawTextBlob(node.text_blob, pos.x(),line+pos.y(),self.drawOptions.txtPaint)
 
 		elif isinstance(node,LinkNode):
-			canvas.drawTextBlob(node.text_blob, pos.x(),l+pos.y(),self.drawOptions.txtPaint)
+			canvas.drawTextBlob(node.text_blob, pos.x(),line+pos.y(),self.drawOptions.txtPaint)
 		elif isinstance(node,MentionNode):
-			canvas.drawTextBlob(node.text_blob, pos.x(),l+pos.y(),self.drawOptions.txtPaint)
+			canvas.drawTextBlob(node.text_blob, pos.x(),line+pos.y(),self.drawOptions.txtPaint)
 		elif isinstance(node,CheermoteNode):
 			node.image.seek(msec)
 			frame = node.image.getFrame()
-			self.drawOptions.drawScaledImage(frame,self.scale,l,pos,canvas)
+			self.drawOptions.drawScaledImage(frame,self.scale,line,pos,canvas)
 		elif isinstance(node,BadgeNode):
 			node.image.seek(msec)
 			frame = node.image.getFrame()
-			self.drawOptions.drawScaledImage(frame,self.scale,l,pos,canvas)
+			self.drawOptions.drawScaledImage(frame,self.scale,line,pos,canvas)
 		elif isinstance(node,EmoteNode):
 			node.image.seek(msec)
 			frame = node.image.getFrame()
-			self.drawOptions.drawScaledImage(frame,self.scale,l,pos,canvas)
+			self.drawOptions.drawScaledImage(frame,self.scale,line,pos,canvas)
 	
 		
 	def render(self,canvas,ms):
@@ -100,43 +100,43 @@ class ImagedChatMessage():
 	def fitToWidth(self):
 		x = 0
 
-		#Measure timestamp
+		# Measure timestamp
 		if self.timestamped:
 			self.msg.ftimestamp.cache(self.drawOptions)
 			self.timestampPos = skia.Point(0,0)
 			nl = self.msg.ftimestamp.width
 			x += nl + 5
 		
-		#Measure badges
+		# Measure badges
 		self.badgePos = []
 		for bn in self.msg.badges:
 			bn.cache(self.drawOptions,self.scale)
 			self.badgePos.append(skia.Point(x,0))
 			x += bn.width + 3
 				
-		#Cache and Measure username
+		# Cache and Measure username
 		self.msg.username.text += ": "
 		self.msg.username.cache(self.drawOptions)
 		self.usernamePos = skia.Point(x,0)
 		x += self.msg.username.width
-		#Measure message content
-		l = 1
+		# Measure message content
+		line = 1
 		self.contentPos = []
 		for n in self.msg.nodes:
-			#cache node
-			n.cache(self.drawOptions,scale=self.scale) #what scale
+			# Cache node
+			n.cache(self.drawOptions,scale=self.scale)  # what scale
 			oX = 0
 			oY = 0
 			nl = n.width
 			
 			if x + nl > self.width:
-				l += 1
+				line += 1
 				oX = 0
 				x = nl
 			else:
 				oX = x
 				x += nl
 
-			oY = (l-1)* self.lh
+			oY = (line-1)* self.lh
 			self.contentPos.append(skia.Point(oX,oY))
-		self.lheight = l
+		self.lheight = line
