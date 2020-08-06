@@ -191,7 +191,7 @@ def addDefaultRenderArgs(args_parser):
 		action='store_true',
 		help='Should the user badges be shown in the log')
 	args_parser.add_argument('--timestamp_format',
-		help='Valid datetime format for strptime()')
+		help='Valid datetime format for strptime()',default="[%H:%M]")
 	args_parser.add_argument('--emote_overrride',
 		help='JSON config describing emotes and urls for them',
 		metavar='<path>')

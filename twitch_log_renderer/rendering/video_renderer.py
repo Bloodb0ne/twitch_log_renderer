@@ -150,7 +150,8 @@ class VideoRenderer:
 		height = self.options['height']
 		outfile = self.options['output_file']
 		# Define placeholder image for failed emotes and issue warnings about them
-		self.chat_messages = [ImagedChatMessage(msg,width,self.drawOptions,self.options['include_timestamps']) for msg in messages.messages]
+		trackedMessages = tqdm(messages.messages,unit='msg',unit_scale=True,desc='\033[92mPreparing\033[0m')
+		self.chat_messages = [ImagedChatMessage(msg,width,self.drawOptions,self.options['include_timestamps']) for msg in trackedMessages]
 		#Set Fadeout Start
 		#Set Fadeout End
 		self.calculateFadeout()

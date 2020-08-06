@@ -112,7 +112,7 @@ def main():
 		help='Path to emote database',dest='db_path'
 		,required=True)
 	emote_download.add_argument('--channel',
-		help='Channel Name or Channel ID',dest='channel',nargs='+')
+		help='Channel Name or Channel ID',dest='channel',nargs='+',default=[])
 	emote_download.add_argument('--globals',
 		help='Should Global Provider emotes be downloaded',dest='global_emotes',action='store_true')
 
@@ -140,6 +140,10 @@ def main():
 		\033[1m html --help\033[0m
 	""")
 	arg_helpers.addDefaultRenderArgs(html_render)
+
+	html_render.add_argument('--template_path',
+			help="Path to the template to use for creating the HTML document",
+			default=False)
 
 	# Rendering to video
 	video_render = subparsers.add_parser('video',help="Create an video file from a log",
@@ -247,7 +251,7 @@ def main():
 	if args.cli_action == 'download':
 		if args.download_action == 'emotes':
 			print('Download emotes from', args.provider)
-					
+			
 			channel_ids = User.convertToUserIDs(args.channel, args.db_path)
 			if 'twitch' in args.provider:
 				if args.global_emotes:
@@ -307,7 +311,7 @@ def main():
 	elif args.cli_action == 'video':
 
 		msgs = prepareLog(args)
-		print(len(msgs.messages))
+		# print(len(msgs.messages))
 		# Invoke Renderer
 		VideoRenderer(vars(args)).run(msgs)
 

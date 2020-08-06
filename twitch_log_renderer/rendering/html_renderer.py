@@ -49,13 +49,14 @@ class HTMLRenderer:
 				text = ''.join([self.renderNode(node) for node in msg.nodes]),
 				badges = ''.join([self.badgeWrapper.substitute(url=node.url,title=node.title) for node in msg.badges])
 			)
+
 	def render(self,chatMessages):
 		output_path = self.options['output_file']
 		
-		#Update options here or create an instance that has the options
 		chatMessages.mergeNodes()
-		print("[HTMLRenderer] Generating html from messages")
-		result = ''.join([self.renderMessage(msg) for msg in tqdm(chatMessages.messages,disable=False)])
+		# print("[HTMLRenderer] Generating html from messages")
+		trackedMessages = tqdm(chatMessages.messages,unit='msg',unit_scale=True,desc='\033[92mGenerating HTML\033[0m',disable=False)
+		result = ''.join([self.renderMessage(msg) for msg in trackedMessages])
 		
 		html_template = "$content"
 		if self.options.get('template_path',False):
