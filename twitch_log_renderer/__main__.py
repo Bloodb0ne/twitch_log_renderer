@@ -190,9 +190,7 @@ def main():
 		configArgs = arg_helpers.mergeConfigOptions(os.sys.argv[1:], pargs.config,flags)
 
 	args = parser.parse_args(configArgs)
-
 	
-
 	if args.cli_action == 'download':
 		if args.download_action == 'emotes':
 			print('Download emotes from', args.provider)
