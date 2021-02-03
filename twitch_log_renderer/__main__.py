@@ -191,10 +191,7 @@ def main():
 
 	args = parser.parse_args(configArgs)
 
-
-
-	# Clips
-	# https://api.twitch.tv/kraken/clips/<slug>
+	
 
 	if args.cli_action == 'download':
 		if args.download_action == 'emotes':
