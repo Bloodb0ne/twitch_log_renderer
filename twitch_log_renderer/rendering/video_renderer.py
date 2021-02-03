@@ -133,6 +133,7 @@ class VideoRenderer:
 			linesLeft -= msg.lheight
 			if linesLeft <= 0:
 				return msg.msg.timestamp.chat_time
+				#Keeping some comments about delay calc for the future
 				# print((msg.endTime - msg.msg.timestamp.chat_time)/ datetime.timedelta(seconds=1))
 				#msg.startFade = msg.endTime - datetime.timedelta(seconds=fadeDuration)
 	def calculateFadeout(self):
@@ -152,8 +153,7 @@ class VideoRenderer:
 		# Define placeholder image for failed emotes and issue warnings about them
 		trackedMessages = tqdm(messages.messages,unit='msg',unit_scale=True,desc='\033[92mPreparing\033[0m')
 		self.chat_messages = [ImagedChatMessage(msg,width,self.drawOptions,self.options['include_timestamps']) for msg in trackedMessages]
-		#Set Fadeout Start
-		#Set Fadeout End
+		
 		self.calculateFadeout()
 		
 		startTime = messages.minTime

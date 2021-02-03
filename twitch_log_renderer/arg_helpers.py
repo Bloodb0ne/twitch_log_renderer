@@ -115,7 +115,7 @@ def valid_path(arg_path):
 		raise argparse.ArgumentTypeError('Invalid ({0}) path selected'.format(arg_path))
 
 
-def mergeConfigOptions(cli_args,cfg_path):
+def mergeConfigOptions(cli_args,cfg_path,flags = []):
 	try:
 		with open(cfg_path,mode='r+') as cfg:
 			new_args = json.loads(cfg.read())
@@ -126,7 +126,7 @@ def mergeConfigOptions(cli_args,cfg_path):
 	cargs = {}
 	key = None
 	for c in cli_args:
-		isOption = c.startswith('--')
+		isOption = c.startswith('--') and c not in flags
 		if isOption and not key:
 			key = c
 		elif not isOption and key:

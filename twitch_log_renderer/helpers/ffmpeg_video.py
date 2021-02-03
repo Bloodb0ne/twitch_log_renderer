@@ -78,9 +78,9 @@ class ffmpeg_output_pipe:
 				.global_args(*global_args)
 				.run_async(pipe_stdin=True)
 			)
-			#print(ffmpeg.compile(ffmpeg.merge_outputs(out_main,out_key)))
+
 		else:
-			#print(ffmpeg.compile(ffinput.output(self.out_filename, **self.options)))
+
 			self.proc =  (
 				ffinput
 				.output(self.out_filename, **self.options)

@@ -243,10 +243,37 @@ Background color of even chat messages in hex rgb ( **#FFFFFF** ) or hex argb ( 
 Background color of odd chat messages in hex rgb ( **#FFFFFF** ) or hex argb ( **#FFFFFFFF** )
 [Color Values](#color-values)
 
+**--sub_even_bg**
+
+[string][color]
+Background color of even chat messages in hex rgb ( **#FFFFFF** ) or hex argb ( **#FFFFFFFF** )
+[Color Values](#color-values)
+
+**--sub_odd_bg**
+    
+[string][color]
+Background color of odd chat messages in hex rgb ( **#FFFFFF** ) or hex argb ( **#FFFFFFFF** )
+[Color Values](#color-values)
+
+**--highlight_bg_color**
+
+[string][color]
+Background color of _Highlighted_ chat messages in hex rgb ( **#FFFFFF** ) or hex argb ( **#FFFFFFFF** )
+[Color Values](#color-values)
+
+**--highlight_sidebar_color**
+    
+[string][color]
+Background color of the small rectangle on the side of the highlighted chat messages in hex rgb ( **#FFFFFF** ) or hex argb ( **#FFFFFFFF** )
+[Color Values](#color-values)
+
 **--fadeout**
     
 [float]
 This value describes how fast the messages will need to slide out of the screen. This is a simple animation, by default this value is 1 which mean that they instantly fade out. If the value is other than 1, there might be a single frame delay before the message goes off screen. 
+
+**--hide_sub_msg**
+Remove the resub/sub/subgift/mysterysub messages from the list that has to be rendered.
 
 # Downloading Emote Data
 

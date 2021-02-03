@@ -20,6 +20,7 @@ class TextNode(metaclass=BasicNode):
 	def __init__(self,text,stype = None):
 		self.text = text
 		self.stype = stype
+		self.newline = re.match(r"\u000D|\u000A|\u0085|\u000B|\u000C|\u2028|\u2029",text)
 	
 	def cache(self,drawOptions:DrawingOptions,**kwargs):
 		'''Cache the text blob and measure the text width'''

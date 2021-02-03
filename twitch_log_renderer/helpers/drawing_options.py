@@ -1,7 +1,9 @@
 import skia
 
 class DrawingOptions:
-	allowed_opts = ['txt_font','txt_font_size','txt_color','uname_font','uname_font_size','even_bg','odd_bg','line_height','image_scale','tstamp_color']
+	allowed_opts = ['txt_font','txt_font_size','txt_color','uname_font',
+	'uname_font_size','even_bg','odd_bg','line_height','image_scale','tstamp_color',
+	'sub_even_bg','sub_odd_bg','sub_txt_color','highlight_bg_color','highlight_sidebar_color','hide_sub_msg']
 	def __init__(self,**kwargs):
 		#Defaults
 		self.txt_font='Arial',
@@ -11,6 +13,13 @@ class DrawingOptions:
 		self.even_bg = skia.ColorSetARGB(0xFF, 0x22, 0x22, 0x22)
 		self.odd_bg = skia.ColorSetARGB(0xFF, 0x18, 0x18, 0x1B)
 		self.txt_color = skia.ColorSetARGB(0xFF, 0xFF, 0xFF, 0xFF)
+		#Sub messages
+		self.sub_even_bg = skia.ColorSetARGB(0xFF, 0x5C, 0x37, 0x73)
+		self.sub_odd_bg = skia.ColorSetARGB(0xFF, 0x61, 0x3C, 0x78)
+		self.sub_txt_color = skia.ColorSetARGB(0xFF, 0x85, 0x7F, 0x7D)
+		#Highlighted message
+		self.highlight_bg_color = skia.ColorSetARGB(0xFF, 0x2F, 0x21, 0x4A)
+		self.highlight_sidebar_color = skia.ColorSetARGB(0xFF, 0x8F, 0x49, 0xFF)
 		
 
 		self.__dict__.update((k, v) for k, v in kwargs.items() if k in DrawingOptions.allowed_opts)
@@ -85,3 +94,25 @@ class DrawingOptions:
 			paint.setColor(self.even_bg)
 
 		canvas.drawRect(rect, paint)
+
+	def drawBackgroundSub(self,canvas,odd,rect):
+		paint = skia.Paint()
+		paint.setStyle(skia.Paint.kFill_Style)
+		paint.setAntiAlias(True)
+		if odd:
+			paint.setColor(self.sub_odd_bg)
+		else:
+			paint.setColor(self.sub_even_bg)
+
+		canvas.drawRect(rect, paint)
+
+	def drawBackgroundHighlighted(self,canvas,odd,rect):
+		paint = skia.Paint()
+		paint.setStyle(skia.Paint.kFill_Style)
+		paint.setAntiAlias(True)
+		paint.setColor(self.highlight_bg_color)
+
+		canvas.drawRect(rect, paint)
+		#Sidebar
+		paint.setColor(self.highlight_sidebar_color)
+		canvas.drawRect(skia.Rect(0,0,5,rect.height()),paint)

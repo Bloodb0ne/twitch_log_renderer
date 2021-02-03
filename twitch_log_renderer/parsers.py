@@ -82,8 +82,11 @@ class LogParser:
 				color = cmt['message'].get('user_color',User.default_user_color)
 				emotes = cmt['message']['fragments']
 				badges = cmt['message'].get('user_badges',[])
+				metaparams = cmt['message'].get('user_notice_params',[])
+				
+
 				Emote.toEmoteCache(emotes)
-				msg = ChatMessage(timestamp,username,text,color,badges=badges,pure=pure_content)
+				msg = ChatMessage(timestamp,username,text,color,badges=badges,pure=pure_content,notice=metaparams)
 				
 				parsed_messages.append(msg)
 

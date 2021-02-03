@@ -3,14 +3,24 @@ import datetime
 import argparse
 import os
 import re
+import numpy as np
 import itertools
 from .parsers import LogParser
-from .rendering import HTMLRenderer, VideoRenderer
+from .rendering import HTMLRenderer, VideoRenderer,ImageRenderer
 from .cachers import BadgeCache, CheermoteCache, Emote
 from .providers import BTTV, FFZ, Twitch, User, Cheermotes, Badges
 
 from . import arg_helpers
+from . import image_arg_opts
+from . import video_arg_opts
 
+
+def getParserOptionals(parser):
+	return [
+		key.option_strings 
+		for key in parser._actions 
+		if isinstance(key,argparse._StoreTrueAction)
+	]
 
 def prepareLog(args):
 	channel_ids = User.convertToUserIDs(args.channel, args.db_path)
@@ -26,9 +36,7 @@ def prepareLog(args):
 	BadgeCache.update(channel_ids[0],1)
 	CheermoteCache.update(channel_ids[0], scale, animated, theme)
 	
-	# Parser gets database path
-	# Parser uses cache classes
-	# Parse Log
+	# Parse Log, needs a better name
 	msgs = LogParser.parse(args.input_file)
 
 	# Filter messages by time
@@ -39,6 +47,7 @@ def prepareLog(args):
 		args.end)
 	
 	msgs.filterByDateRange(start_date=nStart, end_date=nEnd)
+	msgs.removeSubMessages(args.hide_sub_msg)
 
 	if args.include_timestamps:
 		msgs.addFormattedTimestamps(args.timestamp_format)
@@ -154,93 +163,32 @@ def main():
 	""")
 
 	arg_helpers.addDefaultRenderArgs(video_render)
-	video_render.add_argument('--transparent',
-			action='store_true',
-			help='Should the output encode transparency(if the codec doesnt support it creates a second video as a alpha mask)')
-	video_render.add_argument('--encoder',
-			choices=VideoRenderer.getEncoders(),
-			default='h264',
-			help='Encoder to use for the resulting video')
-	video_render.add_argument('--width',
-			default='350',
-			type=int,
-			help='Width of the video')
-	video_render.add_argument('--height',
-			default='600',
-			type=int,
-			help='Height of the video')
-	video_render.add_argument('--fps',
-			default='25',
-			type=float,
-			help='Framerate of the resulting video')
-	video_render.add_argument('--line_height',
-			default='25',
-			type=int,
-			help='Height of a chat line (not the whole message)')
-	video_render.add_argument('--image_scale',
-			default='1',
-			type=arg_helpers.norm_float,
-			help='Scale of images from [0,1]')
-	video_render.add_argument('--txt_font',
-			default='Arial',
-			help='Font name of the text in the message')
-	video_render.add_argument('--txt_color',
-			default='#FFFFFF',
-			type=arg_helpers.hex_color,
-			help='Color of the text portion of the message')
-	video_render.add_argument('--txt_font_size',
-			default=12,
-			type=float,
-			help='Font size of the text elements')
-	video_render.add_argument('--tstamp_color',
-			default='#FFFFFF',
-			type=arg_helpers.hex_color,
-			help='Color of the timestamp of the message')
-	video_render.add_argument('--uname_font',
-			default='Arial',
-			help='Font name of the usernames')
-	video_render.add_argument('--uname_font_size',
-			default=12,
-			type=float,
-			help='Font size of the usernames')
-	video_render.add_argument('--bg',
-			default='#FF000000',
-			type=arg_helpers.hex_color,
-			help='Chat background')
-	video_render.add_argument('--even_bg',
-			default='#222222',
-			type=arg_helpers.hex_color,
-			help='Message background of even messages')
-	video_render.add_argument('--odd_bg',
-			default='#18181B',
-			type=arg_helpers.hex_color,
-			help='Message background of even messages')
-	video_render.add_argument('--fadeout',
-			default='1',
-			type=arg_helpers.norm_float,
-			help='Sets how fast a message fades (value 1 means it instantly fades)')
-
-
+	video_arg_opts.addVideoRenderArgs(video_render)
 
 	#Rendering to image
 	image_render = subparsers.add_parser('image',help="Create an image file from a log",
 	formatter_class=argparse.RawDescriptionHelpFormatter,
 	description="""
 		Create a snapshot of chat, can be a static or animated to preserve
-		animated gif emotes. Output formats can be a gif,webm,png,jpg
+		animated gif emotes. Output formats can be a gif,webm,png
 		\033[1m image --help\033[0m
 	""")
-
+	
+	image_arg_opts.addImageRenderArgs(image_render)
 	arg_helpers.addDefaultRenderArgs(image_render)
 
 
 	pargs,unknown = parser.parse_known_args()
 
+	#Select flags so we can properly filter them
+	#otherwise we cant properly split the arguments
+	flags = np.array([getParserOptionals(image_render),
+					getParserOptionals(video_render)]).flatten()
+
 	configArgs = None
 	if 'config' in pargs and pargs.config:
-		configArgs = arg_helpers.mergeConfigOptions(os.sys.argv[1:], pargs.config)
+		configArgs = arg_helpers.mergeConfigOptions(os.sys.argv[1:], pargs.config,flags)
 
-	# print(configArgs)	
 	args = parser.parse_args(configArgs)
 
 
@@ -253,6 +201,7 @@ def main():
 			print('Download emotes from', args.provider)
 			
 			channel_ids = User.convertToUserIDs(args.channel, args.db_path)
+			
 			if 'twitch' in args.provider:
 				if args.global_emotes:
 					emotes = Twitch().downloadTwitchEmotes()
@@ -311,9 +260,17 @@ def main():
 	elif args.cli_action == 'video':
 
 		msgs = prepareLog(args)
-		# print(len(msgs.messages))
+
 		# Invoke Renderer
 		VideoRenderer(vars(args)).run(msgs)
+
+	elif args.cli_action == 'image':
+
+		msgs = prepareLog(args)
+
+		# Invoke Renderer
+		ImageRenderer(vars(args)).run(msgs)
+	
 
 	elif args.cli_action == 'inspect':
 		# Parse without emotes

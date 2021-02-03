@@ -2,7 +2,7 @@ from setuptools import setup, find_packages, find_namespace_packages
 
 setup(
 	name="twitch_log_renderer",
-	version="0.0.2",
+	version="0.0.3",
 	url="https://github.com/Bloodb0ne/twitch_log_renderer/",
 	author="bloodb0ne",
 	author_email="emilian.branzelov@gmail.com",
@@ -19,6 +19,8 @@ setup(
 		"skia-python >= 85.0",
 		"ffmpeg-python",
 		"numpy",
-		"tqdm"
+		"tqdm",
+		"requests",
+		"uharfbuzz"
 	]
 )

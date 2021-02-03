@@ -31,11 +31,12 @@ class User:
 				result[un] = db_user[0]
 			missing = [u for u in users if u not in result]
 		
+		
 		#Fetch and add from Twitch API		
 		tw_users = Twitch().getUserIDs(missing)
-		for uid,user in tw_users.items():
-			User.addToDB(uid,user,database)
-			result[user] = uid
+		for user,uid in tw_users.items():
+			User.addToDB(user,uid,database)
+			result[user] = int(uid)
 		return result
 	
 	def convertToUserIDs(lst,database = False):

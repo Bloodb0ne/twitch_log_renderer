@@ -59,7 +59,6 @@ class ChatTimestamp:
 		return bool(self.chat_time >= start_time) and bool(self.chat_time <= end_time)
 
 def parseBadge(badge):
-	# print(badge)
 	b = BadgeCache.get(badge['_id'],badge['version'])
 	if not b:
 		return False
@@ -121,11 +120,12 @@ def parseNode(word,isTwitchLog=False):
 
 class ChatMessage(metaclass=Subscriptable):
 	'''Chat Message container'''
-	def __init__(self,timestamp,username,content,user_color=User.default_user_color,badges=[],nonTwitch = False,pure = False):
+	def __init__(self,timestamp,username,content,user_color=User.default_user_color,badges=[],nonTwitch = False,pure = False,notice=[]):
 		self.timestamp = ChatTimestamp(timestamp)
 		self.content = content
 		self.user_color = user_color
 		self.username = TextNode(username,'username')
+		self.notice = notice
 
 		#Ignores searching for Twitch emotes in the log, because we cache them beforehand
 		emoteFinder = functools.partial(parseNode,isTwitchLog = not nonTwitch)
@@ -134,6 +134,39 @@ class ChatMessage(metaclass=Subscriptable):
 			elems = re.findall(r"([\d\w\S]*|\s*)",self.content)
 			self.nodes = [emoteFinder(x) for x in elems]
 	
+	def isSubNotice(self):
+		if not self.notice: 
+			return False
+		return self.notice['msg-id'] == 'sub'
+
+	def isResubNotice(self):
+		if not self.notice: 
+			return False
+		return self.notice['msg-id'] == 'resub'
+
+	def isSubgiftNotice(self):
+		if not self.notice: 
+			return False
+		return self.notice['msg-id'] == 'subgift'
+
+	def isSubMysteryNotice(self):
+		if not self.notice: 
+			return False
+		return self.notice['msg-id'] == 'submysterygift'
+
+	def isHighlightedNotice(self):
+		if not self.notice: 
+			return False
+		return self.notice['msg-id'] == 'highlighted-message'
+
+	def isRaidNotice(self):
+		if not self.notice: 
+			return False
+		return self.notice['msg-id'] == 'raid'
+
+	def isSubscription(self):
+		return self.isSubNotice() or self.isSubMysteryNotice() or self.isResubNotice() or self.isSubgiftNotice()
+
 	def mergeTextNodes(self):
 		'''
 		Groups adjacent text nodes into a single node, if you want to 😎
@@ -193,7 +226,12 @@ class ChatMessageList:
 			
 			if end_date is not datetime.datetime.max:
 				self.maxTime = end_date
-
+	
+	def removeSubMessages(self,hide=False):
+		#Only filters if we hide the messages
+		if hide:
+			self.messages = [msg for msg in self.messages if not msg.isSubscription()]
+	
 	def append(self,message):
 		if isinstance(message,ChatMessage):
 			#update time
